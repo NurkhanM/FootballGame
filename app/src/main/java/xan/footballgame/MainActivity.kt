@@ -2,18 +2,14 @@ package xan.footballgame
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.navigation.NavController
 import xan.footballgame.databinding.ActivityMainBinding
-import xan.footballgame.utils.Parametres
+import xan.footballgame.utils.Parametres.CURRENT_NUMBER_GAME
+import xan.footballgame.utils.Parametres.CURRENT_NUMBER_GAME_MAX
+import xan.footballgame.utils.Parametres.MUSIC_STATE
 
 class MainActivity : AppCompatActivity() {
     lateinit var mediaPlayer: MediaPlayer
@@ -37,10 +33,10 @@ class MainActivity : AppCompatActivity() {
 
     private val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
         if (destination.id == R.id.MenuFragment) {
-            if (Parametres.CURRENT_NUMBER_GAME >= Parametres.CURRENT_NUMBER_GAME_MAX){
-                Parametres.CURRENT_NUMBER_GAME = 0
+            if (CURRENT_NUMBER_GAME >= CURRENT_NUMBER_GAME_MAX){
+                CURRENT_NUMBER_GAME = 0
             }else{
-                Parametres.CURRENT_NUMBER_GAME++
+                CURRENT_NUMBER_GAME++
             }
         }
     }
@@ -48,5 +44,15 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         controller.addOnDestinationChangedListener(listener)
+        if (MUSIC_STATE){
+            mediaPlayer.start()
+        }else{
+            mediaPlayer.pause()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer.pause()
     }
 }
