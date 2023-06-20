@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import xan.footballgame.MainActivity
+import xan.footballgame.MyApp
 import xan.footballgame.R
 import xan.footballgame.databinding.FragmentSettingsBinding
 import xan.footballgame.utils.Parametres.MUSIC_STATE
@@ -49,7 +50,7 @@ class SettingsFragment : Fragment() {
         binding.nextMusic.setOnClickListener {
             musicBoolean()
 
-            val mediaPlayer = (activity as MainActivity).mediaPlayer
+            val mediaPlayer = (requireActivity().application as MyApp).mediaPlayer
 
             MUSIC_STATE = if (!mediaPlayer.isPlaying){
                 mediaPlayer.start()

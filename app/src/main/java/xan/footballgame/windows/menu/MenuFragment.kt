@@ -13,6 +13,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import xan.footballgame.MainActivity
+import xan.footballgame.MyApp
 import xan.footballgame.R
 import xan.footballgame.databinding.FragmentMenuBinding
 import xan.footballgame.utils.Parametres
@@ -36,7 +37,7 @@ class MenuFragment : Fragment() {
     ): View {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
 
-        val mediaPlayer = (activity as MainActivity).mediaPlayer
+        val mediaPlayer = (requireActivity().application as MyApp).mediaPlayer
         if (MUSIC_STATE){
             mediaPlayer.start()
         }else{

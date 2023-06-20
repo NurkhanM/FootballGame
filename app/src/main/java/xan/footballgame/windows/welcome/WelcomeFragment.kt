@@ -84,6 +84,8 @@ class WelcomeFragment : Fragment() {
                     Navigation.findNavController(binding.root)
                         .navigate(R.id.action_welcomeFragment_to_SplashFragment)
                 }
+
+
             } else {
                 Log.d("RemoteConfig", "Failure")
             }

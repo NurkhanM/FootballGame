@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import xan.footballgame.MainActivity
+import xan.footballgame.MyApp
 import xan.footballgame.R
 import xan.footballgame.databinding.FragmentGameBinding
 import xan.footballgame.utils.AnswerTrue.ANSWERS_ALL
@@ -248,7 +249,7 @@ class GameFragment : Fragment() {
                 false
             }
 
-            val mediaPlayer = (activity as MainActivity).mediaPlayer
+            val mediaPlayer = (requireActivity().application as MyApp).mediaPlayer
 
             MUSIC_STATE = if (!mediaPlayer.isPlaying) {
                 mediaPlayer.start()

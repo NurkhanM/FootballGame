@@ -1,6 +1,7 @@
 package xan.footballgame
 
 import android.app.Application
+import android.media.MediaPlayer
 import com.onesignal.OneSignal
 
 // Replace the below with your own ONESIGNAL_APP_ID
@@ -9,11 +10,14 @@ import com.onesignal.OneSignal
 
 class MyApp: Application() {
 
+    lateinit var mediaPlayer: MediaPlayer
+
     override fun onCreate() {
         super.onCreate()
         // Logging set to help debug issues, remove before releasing your app.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.fon_muz)
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
