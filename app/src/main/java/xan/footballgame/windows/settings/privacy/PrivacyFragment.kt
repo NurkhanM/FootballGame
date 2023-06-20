@@ -32,15 +32,6 @@ class PrivacyFragment : Fragment() {
             activity?.onBackPressed()
         }
 
-//        binding.nextStart.setOnClickListener {
-//            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-//        }
-//        binding.nextSetting.setOnClickListener {
-//            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-//        }
-//        binding.nextExit.setOnClickListener {
-//
-//        }
     }
 
     override fun onDestroyView() {

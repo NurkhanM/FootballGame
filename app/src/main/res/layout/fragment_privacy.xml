@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Policy privacy"
+            android:text="Privacy Policy"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"

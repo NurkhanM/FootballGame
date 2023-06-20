@@ -97,7 +97,7 @@
                             android:layout_marginTop="10dp"
                             android:background="@drawable/button_fon"
                             android:gravity="center"
-                            android:text="Policy privacy"
+                            android:text="Privacy Policy"
                             android:textColor="@color/white"
                             android:textSize="20sp" />
                     </LinearLayout>

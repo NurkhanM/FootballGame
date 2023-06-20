@@ -30,7 +30,11 @@ import xan.footballgame.utils.ArrayGameImage.ARRAY_IMAGE
 import xan.footballgame.utils.ArrayGameList.ARRAY_LIST_FOOTBALL
 import xan.footballgame.utils.Parametres.CURRENT_NUMBER_GAME
 import xan.footballgame.utils.Parametres.CURRENT_NUMBER_GAME_MAX
+import xan.footballgame.utils.Parametres.GAME_LIVE
+import xan.footballgame.utils.Parametres.GAME_TOTAL
 import xan.footballgame.utils.Parametres.MUSIC_STATE
+import xan.footballgame.utils.RandomWordFinish.FINISH_WORD
+import xan.footballgame.utils.RandomWordFinish.FINISH_WORD_SMALL
 
 class GameFragment : Fragment() {
 
@@ -49,7 +53,7 @@ class GameFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding by lazy { requireNotNull(_binding) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,7 +102,7 @@ class GameFragment : Fragment() {
         binding.botShare.setOnClickListener {
             val sharingIntent = Intent(Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Football")
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Get ready for a soccer intellectual explosion with Blaze, the fiercest soccer quiz ever!")
             startActivity(Intent.createChooser(sharingIntent, "Share via"))
         }
 
@@ -107,6 +111,8 @@ class GameFragment : Fragment() {
             activity?.onBackPressed()
         }
 
+        binding.textLive.text = GAME_LIVE.toString()
+
     }
 
 
@@ -114,6 +120,7 @@ class GameFragment : Fragment() {
 
         binding.nextA.setOnClickListener {
             checkAnswer(randomGame[0], binding.nextA)
+            binding.nextA.isClickable = false
             binding.nextB.isClickable = false
             binding.nextC.isClickable = false
             binding.nextD.isClickable = false
@@ -122,22 +129,25 @@ class GameFragment : Fragment() {
         binding.nextB.setOnClickListener {
             checkAnswer(randomGame[1], binding.nextB)
             binding.nextA.isClickable = false
+            binding.nextB.isClickable = false
             binding.nextC.isClickable = false
             binding.nextD.isClickable = false
         }
 
         binding.nextC.setOnClickListener {
             checkAnswer(randomGame[2], binding.nextC)
-            binding.nextB.isClickable = false
             binding.nextA.isClickable = false
+            binding.nextB.isClickable = false
+            binding.nextC.isClickable = false
             binding.nextD.isClickable = false
         }
 
         binding.nextD.setOnClickListener {
             checkAnswer(randomGame[3], binding.nextD)
+            binding.nextA.isClickable = false
             binding.nextB.isClickable = false
             binding.nextC.isClickable = false
-            binding.nextA.isClickable = false
+            binding.nextD.isClickable = false
         }
 
         binding.botNext.setOnClickListener {
@@ -159,21 +169,31 @@ class GameFragment : Fragment() {
             true
         } else {
             // Ответ неправильный
-            Toast.makeText(requireContext(), "Неправильный ответ!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Wrong answer!", Toast.LENGTH_SHORT).show()
             false
         }
         colorTrue(textView)
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(800)
-            nextLvL()
+
+        if (GAME_LIVE <= 0){
+            dialogGameOver("You've wasted all your lives")
+        }else{
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(800)
+                nextLvL()
+            }
         }
+
+
     }
 
     private fun colorTrue(textView: TextView) {
         if (isAnswerCorrect) {
             textView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
+            GAME_TOTAL += 1
         } else {
             textView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
+            GAME_LIVE -= 1
+            binding.textLive.text = GAME_LIVE.toString()
         }
     }
 
@@ -247,19 +267,31 @@ class GameFragment : Fragment() {
 
     }
 
-    private fun dialogGameOver() {
+    private fun dialogGameOver(str: String) {
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         dialog.setContentView(R.layout.dialog_game_over)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val textGameOver = dialog.findViewById<TextView>(R.id.titleGameOver)
+        val textResult = dialog.findViewById<TextView>(R.id.gmResult)
+        val textFinish = dialog.findViewById<TextView>(R.id.textFinishWord)
         val buttonAgain = dialog.findViewById<TextView>(R.id.gmAgain)
         val buttonExit = dialog.findViewById<TextView>(R.id.gmExit)
+        textGameOver.text = str
+        textResult.text = GAME_TOTAL.toString()
+        if (GAME_TOTAL >= 5){
+            textFinish.text = FINISH_WORD.random()
+        }else{
+            textFinish.text = FINISH_WORD_SMALL.random()
+        }
         buttonExit.setOnClickListener {
             dialog.dismiss()
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_gameFragment_to_MenuFragment)
         }
         buttonAgain.setOnClickListener {
+            GAME_TOTAL = 0
+            GAME_LIVE = 3
             nextLvL()
             dialog.dismiss()
         }
@@ -306,7 +338,7 @@ class GameFragment : Fragment() {
 
             override fun onFinish() {
                 binding.gameTimer.text = "Game over!"
-                dialogGameOver()
+                dialogGameOver("Time's up")
             }
         }.start()
     }
